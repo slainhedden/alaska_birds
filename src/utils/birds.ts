@@ -43,16 +43,25 @@ export function progressScore(progress: ProgressMap) {
   return { known, learning, attempts, correct };
 }
 
-export function optionSet(answer: Bird, birds: Bird[], offset: number) {
-  const pool = birds.filter((bird) => bird.id !== answer.id);
-  const picks: Bird[] = [];
+export function shuffledBirds(birds: Bird[], seed: string | number) {
+  return [...birds].sort(
+    (left, right) => seededScore(`${seed}:${left.id}`) - seededScore(`${seed}:${right.id}`),
+  );
+}
 
-  for (let index = 0; picks.length < 3 && index < pool.length * 2; index += 1) {
-    const candidate = pool[(offset + index * 7) % pool.length];
-    if (!picks.some((bird) => bird.id === candidate.id)) {
-      picks.push(candidate);
-    }
+export function optionSet(answer: Bird, birds: Bird[], seed: string | number) {
+  const pool = birds.filter((bird) => bird.id !== answer.id);
+  const picks = shuffledBirds(pool, `${seed}:distractors`).slice(0, 3);
+  return shuffledBirds([...picks, answer], `${seed}:answers`);
+}
+
+function seededScore(value: string) {
+  let hash = 2_166_136_261;
+
+  for (let index = 0; index < value.length; index += 1) {
+    hash ^= value.charCodeAt(index);
+    hash = Math.imul(hash, 16_777_619);
   }
 
-  return [...picks, answer].sort((left, right) => left.commonName.localeCompare(right.commonName));
+  return hash >>> 0;
 }

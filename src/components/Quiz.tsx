@@ -1,7 +1,7 @@
 import { ArrowRight, CheckCircle2, XCircle } from "lucide-react";
 import { useMemo, useState } from "react";
 import type { Bird } from "../types";
-import { optionSet } from "../utils/birds";
+import { optionSet, shuffledBirds } from "../utils/birds";
 
 interface QuizProps {
   birds: Bird[];
@@ -14,16 +14,18 @@ interface QuizResult {
 }
 
 export function Quiz({ birds, onAnswer }: QuizProps) {
+  const [runSeed, setRunSeed] = useState(() => randomSeed());
   const [index, setIndex] = useState(0);
   const [result, setResult] = useState<QuizResult | null>(null);
   const sorted = useMemo(() => [...birds].sort((left, right) => left.priority - right.priority), [birds]);
+  const deck = useMemo(() => shuffledBirds(sorted, runSeed), [sorted, runSeed]);
 
   if (sorted.length < 4) {
     return <section className="learning-panel">At least four birds are needed for quiz mode.</section>;
   }
 
-  const answer = sorted[index % sorted.length];
-  const options = optionSet(answer, sorted, index + 2);
+  const answer = deck[index % deck.length];
+  const options = optionSet(answer, sorted, `${runSeed}:${index}`);
   const questionType = index % 3;
   const prompt =
     questionType === 0
@@ -43,7 +45,13 @@ export function Quiz({ birds, onAnswer }: QuizProps) {
   }
 
   function next() {
-    setIndex((current) => current + 1);
+    setIndex((current) => {
+      const nextIndex = current + 1;
+      if (nextIndex % deck.length === 0) {
+        setRunSeed(randomSeed());
+      }
+      return nextIndex;
+    });
     setResult(null);
   }
 
@@ -88,4 +96,8 @@ export function Quiz({ birds, onAnswer }: QuizProps) {
       </div>
     </section>
   );
+}
+
+function randomSeed() {
+  return globalThis.crypto?.randomUUID?.() ?? `${Date.now()}:${Math.random()}`;
 }

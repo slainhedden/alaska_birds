@@ -221,3 +221,26 @@ Commands run:
 
 Remaining:
 - No blocking work remains. After the GitHub repo exists, set Pages source to GitHub Actions and push `main`.
+
+## Follow-up: Mobile Browse And Quiz Shuffle
+
+Changed:
+- Added a mobile bird-detail sheet so tapping a bird on small screens opens details immediately over the card list instead of requiring a long scroll to the desktop side panel.
+- Hid the desktop detail panel on compact layouts while preserving it on desktop.
+- Enlarged bird cards, card images, mode buttons, learning panels, and quiz choices for easier mobile tapping and scanning.
+- Added seeded shuffling for quiz decks, sound quiz decks, and answer choices so each run is not locked to the same bird order.
+- Updated Playwright coverage to assert the mobile detail sheet appears at the top of the viewport and still has no horizontal overflow.
+
+Verified:
+- `npm run build` passed.
+- `npm run validate` passed.
+- Manual in-app browser check passed on a 390px viewport: tapping Common Raven opens the detail sheet at the top of the viewport, with no horizontal overflow.
+- Manual desktop check passed at 1440px: larger cards render in a three-column grid, desktop detail remains present, and no mobile sheet is rendered.
+- Manual quiz check showed a randomized first quiz prompt and non-alphabetical answer order.
+
+Commands run:
+- `npm run build`
+- `npm run validate`
+
+Remaining:
+- No blocking work remains.

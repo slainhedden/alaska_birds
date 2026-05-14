@@ -1,4 +1,4 @@
-import { Binoculars, BookOpen, Headphones, Layers, ListFilter } from "lucide-react";
+import { Binoculars, BookOpen, Headphones, Layers, ListFilter, X } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { BirdCard } from "./components/BirdCard";
 import { BirdDetail } from "./components/BirdDetail";
@@ -31,11 +31,28 @@ export default function App() {
   const [mode, setMode] = useState<AppMode>("browse");
   const [filters, setFilters] = useState(defaultFilters);
   const [selectedId, setSelectedId] = useState(sortedBirds[0]?.id ?? "");
+  const [isCompactViewport, setIsCompactViewport] = useState(false);
+  const [isMobileDetailOpen, setIsMobileDetailOpen] = useState(false);
   const [progress, setProgress] = useState(() => loadProgress(sortedBirds));
 
   useEffect(() => {
     saveProgress(progress);
   }, [progress]);
+
+  useEffect(() => {
+    const media = window.matchMedia("(max-width: 980px)");
+
+    function updateViewportState() {
+      setIsCompactViewport(media.matches);
+      if (!media.matches) {
+        setIsMobileDetailOpen(false);
+      }
+    }
+
+    updateViewportState();
+    media.addEventListener("change", updateViewportState);
+    return () => media.removeEventListener("change", updateViewportState);
+  }, []);
 
   const habitats = useMemo(() => {
     const unique = new Set<HabitatTag>();
@@ -74,6 +91,16 @@ export default function App() {
   function handleSelect(bird: Bird) {
     setSelectedId(bird.id);
     setMode("browse");
+    if (isCompactViewport) {
+      setIsMobileDetailOpen(true);
+    }
+  }
+
+  function handleMode(nextMode: AppMode) {
+    setMode(nextMode);
+    if (nextMode !== "browse") {
+      setIsMobileDetailOpen(false);
+    }
   }
 
   function handleMastery(birdId: string, mastery: Mastery) {
@@ -104,7 +131,7 @@ export default function App() {
                 className={mode === item.mode ? "active" : ""}
                 data-testid={`mode-${item.mode}`}
                 key={item.mode}
-                onClick={() => setMode(item.mode)}
+                onClick={() => handleMode(item.mode)}
                 type="button"
               >
                 <Icon size={18} /> {item.label}
@@ -138,11 +165,46 @@ export default function App() {
               />
             ))}
           </section>
-          <BirdDetail
-            bird={selectedBird}
-            mastery={progress[selectedBird.id]?.mastery ?? "new"}
-            onMastery={handleMastery}
-          />
+          <div className="desktop-detail-pane">
+            <BirdDetail
+              bird={selectedBird}
+              mastery={progress[selectedBird.id]?.mastery ?? "new"}
+              onMastery={handleMastery}
+            />
+          </div>
+        </div>
+      ) : null}
+
+      {mode === "browse" && isCompactViewport && isMobileDetailOpen ? (
+        <div
+          className="mobile-detail-backdrop"
+          data-testid="mobile-detail-sheet"
+          onClick={() => setIsMobileDetailOpen(false)}
+        >
+          <div
+            className="mobile-detail-sheet"
+            role="dialog"
+            aria-label={`${selectedBird.commonName} details`}
+            aria-modal="true"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <div className="mobile-detail-bar">
+              <span>Bird Details</span>
+              <button
+                aria-label="Close bird details"
+                data-testid="close-mobile-detail"
+                onClick={() => setIsMobileDetailOpen(false)}
+                type="button"
+              >
+                <X size={18} />
+              </button>
+            </div>
+            <BirdDetail
+              bird={selectedBird}
+              mastery={progress[selectedBird.id]?.mastery ?? "new"}
+              onMastery={handleMastery}
+            />
+          </div>
         </div>
       ) : null}
 

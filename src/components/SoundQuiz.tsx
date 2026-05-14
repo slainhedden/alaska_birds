@@ -2,7 +2,7 @@ import { ArrowRight, CheckCircle2, ExternalLink, Volume2, XCircle } from "lucide
 import { useMemo, useState } from "react";
 import type { Bird } from "../types";
 import { preferredAudioUrl } from "../utils/audio";
-import { optionSet } from "../utils/birds";
+import { optionSet, shuffledBirds } from "../utils/birds";
 
 interface SoundQuizProps {
   birds: Bird[];
@@ -17,23 +17,27 @@ interface SoundResult {
 }
 
 export function SoundQuiz({ birds, onAnswer }: SoundQuizProps) {
+  const [runSeed, setRunSeed] = useState(() => randomSeed());
   const [mode, setMode] = useState<SoundMode>("audio");
   const [index, setIndex] = useState(0);
   const [result, setResult] = useState<SoundResult | null>(null);
-  const audioBirds = useMemo(() => birds.filter((bird) => preferredAudioUrl(bird)), [birds]);
+  const audioBirds = useMemo(
+    () => shuffledBirds(birds.filter((bird) => preferredAudioUrl(bird)), `${runSeed}:audio`),
+    [birds, runSeed],
+  );
   const clueBirds = useMemo(
     () =>
-      [...birds].sort((left, right) => {
+      shuffledBirds([...birds], `${runSeed}:clue`).sort((left, right) => {
         const leftSound = left.learningTags.includes("sound-first") ? 0 : 1;
         const rightSound = right.learningTags.includes("sound-first") ? 0 : 1;
-        return leftSound - rightSound || left.priority - right.priority;
+        return leftSound - rightSound;
       }),
-    [birds],
+    [birds, runSeed],
   );
   const deck = mode === "audio" && audioBirds.length > 0 ? audioBirds : clueBirds;
   const answer = deck[index % deck.length];
   const audioUrl = preferredAudioUrl(answer);
-  const options = optionSet(answer, birds, index + 5);
+  const options = optionSet(answer, birds, `${runSeed}:${mode}:${index}`);
 
   function choose(bird: Bird) {
     if (result) {
@@ -46,7 +50,13 @@ export function SoundQuiz({ birds, onAnswer }: SoundQuizProps) {
   }
 
   function next() {
-    setIndex((current) => current + 1);
+    setIndex((current) => {
+      const nextIndex = current + 1;
+      if (nextIndex % deck.length === 0) {
+        setRunSeed(randomSeed());
+      }
+      return nextIndex;
+    });
     setResult(null);
   }
 
@@ -54,6 +64,7 @@ export function SoundQuiz({ birds, onAnswer }: SoundQuizProps) {
     setMode(nextMode);
     setIndex(0);
     setResult(null);
+    setRunSeed(randomSeed());
   }
 
   return (
@@ -142,4 +153,8 @@ export function SoundQuiz({ birds, onAnswer }: SoundQuizProps) {
       </div>
     </section>
   );
+}
+
+function randomSeed() {
+  return globalThis.crypto?.randomUUID?.() ?? `${Date.now()}:${Math.random()}`;
 }

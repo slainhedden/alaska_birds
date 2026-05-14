@@ -53,7 +53,7 @@ test("validates the bird learning app core flows", async ({ page }) => {
   });
 
   await test.step("flashcard mode reveals and advances", async () => {
-    await page.getByRole("button", { name: "Cards" }).click();
+    await page.getByTestId("mode-flashcards").click();
     await expect(page.getByTestId("flashcard-panel")).toBeVisible();
     await expect(page.getByText("Card 1 of 83")).toBeVisible();
     await page.locator(".flashcard").click();
@@ -63,7 +63,7 @@ test("validates the bird learning app core flows", async ({ page }) => {
   });
 
   await test.step("quiz mode answers questions", async () => {
-    await page.getByRole("button", { name: "Quiz" }).click();
+    await page.getByTestId("mode-quiz").click();
     await expect(page.getByTestId("quiz-panel")).toBeVisible();
     await page.getByTestId("quiz-choice").first().click();
     await expect(page.getByTestId("quiz-result")).toBeVisible();
@@ -71,7 +71,7 @@ test("validates the bird learning app core flows", async ({ page }) => {
   });
 
   await test.step("sound quiz uses local audio and call-clue practice", async () => {
-    await page.getByRole("button", { name: "Sound" }).click();
+    await page.getByTestId("mode-sound").click();
     await expect(page.getByTestId("sound-quiz-panel")).toBeVisible();
     await expect(page.getByTestId("sound-audio")).toBeVisible();
     await page.getByTestId("sound-choice").first().click();
@@ -85,7 +85,20 @@ test("validates the bird learning app core flows", async ({ page }) => {
   await test.step("mobile viewport remains usable", async () => {
     await page.setViewportSize({ width: 390, height: 844 });
     await expect(page.getByRole("button", { name: "Browse" })).toBeVisible();
-    await page.getByRole("button", { name: "Sound" }).click();
+    await page.getByTestId("mode-browse").click();
+    await page.getByTestId("bird-card").filter({ hasText: "Common Raven" }).click();
+    await expect(page.getByTestId("mobile-detail-sheet")).toBeVisible();
+    await expect(page.getByTestId("mobile-detail-sheet")).toContainText("Common Raven");
+
+    const mobileSheetTop = await page.getByTestId("mobile-detail-sheet").evaluate((element) => {
+      return element.getBoundingClientRect().top;
+    });
+    expect(mobileSheetTop).toBeLessThan(80);
+
+    await page.getByTestId("close-mobile-detail").click();
+    await expect(page.getByTestId("mobile-detail-sheet")).toBeHidden();
+
+    await page.getByTestId("mode-sound").click();
     await expect(page.getByTestId("sound-quiz-panel")).toBeVisible();
 
     const hasHorizontalOverflow = await page.evaluate(
