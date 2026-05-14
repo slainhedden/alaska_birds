@@ -1,0 +1,11 @@
+node_modules
+dist
+playwright-report
+test-results
+.playwright-mcp
+.firecrawl
+.audio-ingest-test
+.audio-ingest-work
+.DS_Store
+data/audio-source/*
+!data/audio-source/.gitkeep

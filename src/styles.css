@@ -1,0 +1,711 @@
+:root {
+  color: #18241f;
+  background: #f3f0e7;
+  font-family:
+    Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  background:
+    linear-gradient(180deg, rgba(97, 139, 127, 0.18), rgba(243, 240, 231, 0.2) 280px),
+    #f3f0e7;
+}
+
+button,
+input,
+select {
+  font: inherit;
+}
+
+button {
+  color: inherit;
+}
+
+a {
+  color: #1f6872;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+.app-shell {
+  width: min(1440px, 100%);
+  margin: 0 auto;
+  padding: 24px;
+}
+
+.app-header {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 24px;
+  align-items: end;
+  padding: 12px 0 18px;
+}
+
+.eyebrow {
+  color: #7a4d2c;
+  display: inline-block;
+  font-size: 0.78rem;
+  font-weight: 760;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+h1,
+h2,
+h3,
+p {
+  margin-top: 0;
+}
+
+h1 {
+  font-size: clamp(2rem, 4vw, 4.2rem);
+  line-height: 0.95;
+  margin-bottom: 10px;
+}
+
+.app-header p {
+  color: #53645c;
+  margin-bottom: 0;
+  max-width: 720px;
+}
+
+.mode-tabs,
+.segmented,
+.detail-actions,
+.learning-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.mode-tabs button,
+.segmented button,
+.detail-actions button,
+.learning-actions button,
+.ghost-button {
+  align-items: center;
+  background: rgba(255, 255, 255, 0.78);
+  border: 1px solid rgba(31, 48, 41, 0.16);
+  border-radius: 8px;
+  cursor: pointer;
+  display: inline-flex;
+  gap: 8px;
+  min-height: 40px;
+  padding: 9px 12px;
+}
+
+.mode-tabs button.active,
+.segmented button.active,
+.detail-actions button.active,
+.learning-actions button:hover,
+.ghost-button:hover {
+  background: #1f4d43;
+  border-color: #1f4d43;
+  color: #fff;
+}
+
+.progress-summary {
+  align-items: center;
+  background: #fffaf0;
+  border: 1px solid rgba(63, 80, 70, 0.16);
+  border-radius: 8px;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto auto;
+  gap: 16px;
+  margin: 8px 0 14px;
+  padding: 14px;
+}
+
+.progress-summary h2 {
+  font-size: 1rem;
+  margin-bottom: 4px;
+}
+
+.progress-summary p {
+  color: #5f675f;
+  margin-bottom: 0;
+}
+
+.progress-ring {
+  align-items: center;
+  background: #d8e7d3;
+  border: 4px solid #6f8f44;
+  border-radius: 999px;
+  display: grid;
+  font-weight: 800;
+  height: 58px;
+  justify-items: center;
+  width: 58px;
+}
+
+.summary-icon {
+  color: #b45e31;
+}
+
+.filter-bar {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: minmax(240px, 1fr) minmax(170px, auto) minmax(150px, auto);
+  margin: 10px 0;
+}
+
+.search-field,
+.select-field {
+  align-items: center;
+  background: #ffffff;
+  border: 1px solid rgba(31, 48, 41, 0.16);
+  border-radius: 8px;
+  display: flex;
+  gap: 8px;
+  min-height: 44px;
+  padding: 0 12px;
+}
+
+.search-field input,
+.select-field select {
+  background: transparent;
+  border: 0;
+  color: #18241f;
+  min-width: 0;
+  outline: 0;
+  width: 100%;
+}
+
+.deck-status {
+  align-items: center;
+  color: #526058;
+  display: flex;
+  gap: 8px;
+  margin: 10px 0 12px;
+}
+
+.browse-layout {
+  align-items: start;
+  display: grid;
+  gap: 18px;
+  grid-template-columns: minmax(0, 1fr) minmax(330px, 420px);
+}
+
+.bird-grid {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(auto-fill, minmax(265px, 1fr));
+}
+
+.bird-card {
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid rgba(31, 48, 41, 0.14);
+  border-radius: 8px;
+  cursor: pointer;
+  display: grid;
+  gap: 12px;
+  grid-template-columns: 72px minmax(0, 1fr) auto;
+  min-height: 168px;
+  padding: 12px;
+  text-align: left;
+}
+
+.bird-card:hover,
+.bird-card.selected {
+  border-color: #2d7467;
+  box-shadow: 0 10px 24px rgba(32, 54, 45, 0.11);
+  transform: translateY(-1px);
+}
+
+.bird-card-body {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.bird-card-topline,
+.panel-heading {
+  align-items: center;
+  display: flex;
+  gap: 8px;
+  justify-content: space-between;
+}
+
+.bird-card-name {
+  font-size: 1.08rem;
+  font-weight: 780;
+}
+
+.bird-card-science,
+.scientific {
+  color: #667269;
+  font-style: italic;
+}
+
+.bird-card-hint {
+  color: #37483f;
+  font-size: 0.92rem;
+  line-height: 1.35;
+}
+
+.bird-glyph {
+  border: 1px solid rgba(255, 255, 255, 0.62);
+  border-radius: 8px;
+  height: 72px;
+  overflow: hidden;
+  position: relative;
+  width: 72px;
+}
+
+.bird-card-image {
+  aspect-ratio: 1;
+  background: #e9eee7;
+  border-radius: 8px;
+  height: 72px;
+  object-fit: cover;
+  width: 72px;
+}
+
+.glyph-wing,
+.glyph-head,
+.glyph-tail {
+  background: rgba(255, 255, 255, 0.82);
+  display: block;
+  position: absolute;
+}
+
+.glyph-wing {
+  border-radius: 999px 999px 999px 12px;
+  height: 28px;
+  left: 18px;
+  top: 28px;
+  transform: rotate(-18deg);
+  width: 36px;
+}
+
+.glyph-head {
+  border-radius: 999px;
+  height: 18px;
+  left: 42px;
+  top: 20px;
+  width: 18px;
+}
+
+.glyph-tail {
+  clip-path: polygon(0 0, 100% 50%, 0 100%);
+  height: 20px;
+  left: 8px;
+  top: 36px;
+  width: 22px;
+}
+
+.tier {
+  border-radius: 999px;
+  display: inline-flex;
+  font-size: 0.72rem;
+  font-weight: 800;
+  padding: 4px 8px;
+  text-transform: uppercase;
+}
+
+.tier-common {
+  background: #d8e7d3;
+  color: #264b31;
+}
+
+.tier-possible {
+  background: #f2dfbb;
+  color: #6d451e;
+}
+
+.tier-uncommon {
+  background: #ead9dd;
+  color: #713747;
+}
+
+.inline-icon {
+  align-items: center;
+  color: #2a6a76;
+  display: inline-flex;
+}
+
+.mastery-dot {
+  align-items: center;
+  border-radius: 999px;
+  display: inline-flex;
+  height: 28px;
+  justify-content: center;
+  width: 28px;
+}
+
+.mastery-new {
+  color: #879189;
+}
+
+.mastery-learning {
+  background: #f2dfbb;
+  color: #7a4d2c;
+}
+
+.mastery-known {
+  background: #d8e7d3;
+  color: #264b31;
+}
+
+.habitat-strip {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.habitat-strip span {
+  background: rgba(47, 92, 76, 0.09);
+  border-radius: 999px;
+  color: #42524a;
+  font-size: 0.76rem;
+  padding: 4px 8px;
+}
+
+.bird-detail,
+.learning-panel {
+  background: #fffdfa;
+  border: 1px solid rgba(31, 48, 41, 0.15);
+  border-radius: 8px;
+  box-shadow: 0 14px 32px rgba(32, 54, 45, 0.12);
+}
+
+.bird-detail {
+  display: grid;
+  gap: 18px;
+  max-height: calc(100vh - 24px);
+  overflow: auto;
+  padding: 16px;
+  position: sticky;
+  top: 12px;
+}
+
+.detail-hero {
+  align-items: center;
+  display: grid;
+  gap: 12px;
+  grid-template-columns: 82px minmax(0, 1fr);
+}
+
+.detail-hero .bird-glyph {
+  height: 82px;
+  width: 82px;
+}
+
+.detail-primary-image {
+  aspect-ratio: 1;
+  background: #e9eee7;
+  border-radius: 8px;
+  height: 82px;
+  object-fit: cover;
+  width: 82px;
+}
+
+.detail-hero h2 {
+  font-size: 1.6rem;
+  margin: 8px 0 2px;
+}
+
+.bird-detail h3,
+.learning-panel h2 {
+  font-size: 0.98rem;
+  margin-bottom: 8px;
+}
+
+.bird-detail p,
+.learning-panel p {
+  color: #3f4b43;
+  line-height: 1.48;
+  margin-bottom: 8px;
+}
+
+.mark-list {
+  display: grid;
+  gap: 6px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.mark-list li {
+  background: #f2efe5;
+  border-radius: 8px;
+  padding: 8px;
+}
+
+.image-gallery {
+  display: grid;
+  gap: 8px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.image-gallery a {
+  align-items: stretch;
+  background: #f2efe5;
+  border-radius: 8px;
+  color: inherit;
+  display: grid;
+  gap: 6px;
+  overflow: hidden;
+  padding-bottom: 8px;
+  text-decoration: none;
+}
+
+.image-gallery img {
+  aspect-ratio: 4 / 3;
+  background: #e9eee7;
+  object-fit: cover;
+  width: 100%;
+}
+
+.image-gallery span,
+.image-gallery small {
+  padding: 0 8px;
+}
+
+.image-gallery span {
+  font-weight: 780;
+}
+
+.image-gallery small {
+  color: #667269;
+  line-height: 1.25;
+}
+
+.sound-panel audio,
+.learning-panel audio {
+  display: block;
+  margin: 10px 0;
+  width: 100%;
+}
+
+.sound-mnemonic {
+  color: #7a4d2c;
+  font-size: 1.15rem;
+  font-weight: 800;
+}
+
+.media-note,
+.confusion {
+  color: #6e5e52;
+}
+
+.bird-detail a,
+.source-link {
+  align-items: center;
+  display: inline-flex;
+  gap: 6px;
+}
+
+.local-audio-list {
+  background: #eef3ed;
+  border-radius: 8px;
+  display: grid;
+  gap: 6px;
+  margin: 10px 0;
+  padding: 10px;
+}
+
+.local-audio-list a {
+  font-size: 0.9rem;
+}
+
+.learning-panel {
+  margin: 0 auto;
+  max-width: 850px;
+  padding: 18px;
+}
+
+.flashcard {
+  align-items: stretch;
+  background: #fdf8ed;
+  border: 1px solid rgba(31, 48, 41, 0.14);
+  border-radius: 8px;
+  cursor: pointer;
+  display: grid;
+  gap: 18px;
+  grid-template-columns: 110px minmax(0, 1fr);
+  margin: 14px 0;
+  min-height: 260px;
+  padding: 18px;
+  text-align: left;
+  width: 100%;
+}
+
+.flashcard .bird-glyph {
+  height: 110px;
+  width: 110px;
+}
+
+.flashcard-answer,
+.flashcard-prompt {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  justify-content: center;
+}
+
+.flashcard-answer strong,
+.flashcard-prompt strong {
+  font-size: clamp(1.35rem, 4vw, 2.3rem);
+  line-height: 1.04;
+}
+
+.flashcard-answer em,
+.flashcard-prompt span {
+  color: #4c5a52;
+}
+
+.quiz-clue {
+  background: #eef3ed;
+  border-left: 4px solid #4d8b72;
+  border-radius: 8px;
+  font-size: 1.05rem;
+  padding: 12px;
+}
+
+.choice-grid {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin: 14px 0;
+}
+
+.choice-grid button {
+  background: #ffffff;
+  border: 1px solid rgba(31, 48, 41, 0.18);
+  border-radius: 8px;
+  cursor: pointer;
+  min-height: 48px;
+  padding: 12px;
+  text-align: left;
+}
+
+.choice-grid button:hover:not(:disabled) {
+  border-color: #2d7467;
+}
+
+.choice-grid button.picked {
+  background: #f2dfbb;
+}
+
+.choice-grid button.answer {
+  background: #d8e7d3;
+  border-color: #4e7e5a;
+}
+
+.result,
+.no-audio,
+.audio-shell {
+  align-items: center;
+  border-radius: 8px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 12px 0;
+  padding: 12px;
+}
+
+.result-correct {
+  background: #d8e7d3;
+  color: #264b31;
+}
+
+.result-wrong,
+.no-audio {
+  background: #f5e5d4;
+  color: #704723;
+}
+
+.audio-shell {
+  background: #e8f0ec;
+  color: #2d5c4c;
+}
+
+.audio-shell audio {
+  flex: 1 1 100%;
+  margin: 4px 0 0;
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.62;
+}
+
+@media (max-width: 980px) {
+  .app-header,
+  .browse-layout,
+  .filter-bar,
+  .progress-summary {
+    grid-template-columns: 1fr;
+  }
+
+  .bird-detail {
+    max-height: none;
+    position: static;
+  }
+}
+
+@media (max-width: 640px) {
+  .app-shell {
+    padding: 14px;
+  }
+
+  h1 {
+    font-size: 2.25rem;
+  }
+
+  .mode-tabs {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .mode-tabs button {
+    justify-content: center;
+  }
+
+  .bird-card {
+    grid-template-columns: 62px minmax(0, 1fr);
+    min-height: 0;
+  }
+
+  .bird-card .bird-glyph {
+    height: 62px;
+    width: 62px;
+  }
+
+  .bird-card-image {
+    height: 62px;
+    width: 62px;
+  }
+
+  .mastery-dot {
+    grid-column: 1 / -1;
+    justify-self: start;
+  }
+
+  .mark-list,
+  .choice-grid,
+  .flashcard,
+  .image-gallery {
+    grid-template-columns: 1fr;
+  }
+
+  .flashcard .bird-glyph {
+    height: 92px;
+    width: 92px;
+  }
+}
