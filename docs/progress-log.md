@@ -288,6 +288,7 @@ Changed:
 - Redesigned browse into grouped, table-like bird rows with larger thumbnails, favorites, likelihood sections, and a mobile detail sheet that opens at the top of the viewport.
 - Redesigned flashcards, quiz, and sound quiz into the larger mockup-style learning panels with side stats, image/audio focus, answer cards, and clearer action buttons.
 - Added a favorites-only filter and persisted favorites locally.
+- Tightened the mobile quiz/sound quiz responsive rules after live Pages inspection showed the sound quiz panel was too cramped on a phone-width viewport.
 
 Verified:
 - `npm run build` passed.
@@ -297,6 +298,7 @@ Verified:
 - Browser-use DOM check on `http://localhost:5173/` found the Birds page, 83 rendered bird cards, and 83 visible card images.
 - Playwright visual inspection screenshots were reviewed for desktop browse, mobile browse, flashcards, quiz, and sound quiz.
 - Mobile Playwright checks found no horizontal overflow on Browse, Cards, Quiz, Sounds, or the mobile bird detail sheet.
+- Live GitHub Pages mobile smoke testing verified cards, local images, flashcards, quiz, sound quiz, and mobile detail behavior at `https://slainhedden.github.io/alaska_birds/`.
 
 Commands run:
 - `npm run build`
@@ -304,6 +306,7 @@ Commands run:
 - `npm run validate`
 - `VITE_BASE_PATH=/alaska_birds/ npm run build`
 - Playwright screenshot and mobile overflow checks against `http://localhost:5173/`
+- Browser-use and Playwright mobile smoke checks against `https://slainhedden.github.io/alaska_birds/`
 
 Remaining:
 - No blocking work remains.

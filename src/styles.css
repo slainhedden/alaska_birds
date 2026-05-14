@@ -941,6 +941,16 @@ p {
   font-weight: 800;
 }
 
+.choice-grid em,
+.choice-grid button > span:last-child {
+  min-width: 0;
+}
+
+.choice-grid strong,
+.choice-grid em {
+  overflow-wrap: anywhere;
+}
+
 .choice-radio {
   width: 16px;
   height: 16px;
@@ -1223,6 +1233,10 @@ button:disabled {
   .mark-list,
   .image-gallery {
     grid-template-columns: 1fr;
+  }
+
+  .sound-about {
+    grid-column: auto;
   }
 
   .deck-status {
