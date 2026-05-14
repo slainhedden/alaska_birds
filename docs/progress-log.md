@@ -279,3 +279,34 @@ Remaining:
 
 Assumptions:
 - The phone issue was caused by mobile/Safari handling of cross-site lazy-loaded Wikimedia thumbnails. Serving the thumbnails from the Pages origin removes that dependency.
+
+## Follow-up: Mockup UI Redesign
+
+Changed:
+- Moved the supplied root `logo.png` into `public/logo.png`, cropped the extra whitespace, and wired it into the app header so it is served correctly on GitHub Pages.
+- Reworked the app shell to match the Alaska Bird Guide mockups: top navigation, left section rail, compact trip/progress panel, white canvas, navy text, and blue active states.
+- Redesigned browse into grouped, table-like bird rows with larger thumbnails, favorites, likelihood sections, and a mobile detail sheet that opens at the top of the viewport.
+- Redesigned flashcards, quiz, and sound quiz into the larger mockup-style learning panels with side stats, image/audio focus, answer cards, and clearer action buttons.
+- Added a favorites-only filter and persisted favorites locally.
+
+Verified:
+- `npm run build` passed.
+- `npm run test` passed.
+- `npm run validate` passed, including lint, image validation, sound validation, audio ingest validation, build, and Playwright.
+- `VITE_BASE_PATH=/alaska_birds/ npm run build` passed and produced Pages-safe asset paths.
+- Browser-use DOM check on `http://localhost:5173/` found the Birds page, 83 rendered bird cards, and 83 visible card images.
+- Playwright visual inspection screenshots were reviewed for desktop browse, mobile browse, flashcards, quiz, and sound quiz.
+- Mobile Playwright checks found no horizontal overflow on Browse, Cards, Quiz, Sounds, or the mobile bird detail sheet.
+
+Commands run:
+- `npm run build`
+- `npm run test`
+- `npm run validate`
+- `VITE_BASE_PATH=/alaska_birds/ npm run build`
+- Playwright screenshot and mobile overflow checks against `http://localhost:5173/`
+
+Remaining:
+- No blocking work remains.
+
+Assumptions:
+- The two visible mockups supplied in chat were used as the visual target. The referenced third file at `/Users/samhedden/Downloads/ChatGPT Image May 13, 2026, 09_27_12 PM.png` was unavailable in this environment.

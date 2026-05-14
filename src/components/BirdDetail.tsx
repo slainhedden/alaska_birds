@@ -1,4 +1,4 @@
-import { Check, ExternalLink, GraduationCap, RotateCcw, Volume2 } from "lucide-react";
+import { Check, ExternalLink, GraduationCap, RotateCcw, Star, Volume2 } from "lucide-react";
 import type { Bird, Mastery } from "../types";
 import { localTracksForBird, preferredAudioUrl } from "../utils/audio";
 import { habitatLabels, likelihoodLabels } from "../utils/birds";
@@ -8,10 +8,12 @@ import { BirdGlyph } from "./BirdGlyph";
 interface BirdDetailProps {
   bird: Bird;
   mastery: Mastery;
+  isFavorite: boolean;
+  onToggleFavorite: (birdId: string) => void;
   onMastery: (birdId: string, mastery: Mastery) => void;
 }
 
-export function BirdDetail({ bird, mastery, onMastery }: BirdDetailProps) {
+export function BirdDetail({ bird, mastery, isFavorite, onMastery, onToggleFavorite }: BirdDetailProps) {
   const localTracks = localTracksForBird(bird);
   const audioUrl = preferredAudioUrl(bird);
   const images = imagesForBird(bird);
@@ -35,6 +37,14 @@ export function BirdDetail({ bird, mastery, onMastery }: BirdDetailProps) {
           <h2>{bird.commonName}</h2>
           <p className="scientific">{bird.scientificName}</p>
         </div>
+        <button
+          aria-label={isFavorite ? "Remove from favorites" : "Add to favorites"}
+          className={`favorite-button ${isFavorite ? "active" : ""}`}
+          onClick={() => onToggleFavorite(bird.id)}
+          type="button"
+        >
+          <Star size={19} />
+        </button>
       </div>
 
       <div className="detail-actions" aria-label="Mastery controls">
@@ -62,9 +72,28 @@ export function BirdDetail({ bird, mastery, onMastery }: BirdDetailProps) {
       </div>
 
       <section>
+        <h3>Field Marks</h3>
+        <ul className="mark-list">
+          {bird.fieldMarks.map((mark) => (
+            <li key={mark}>{mark}</li>
+          ))}
+        </ul>
+      </section>
+
+      <section>
+        <h3>Trip Habitat</h3>
+        <p>{bird.habitat}</p>
+        <div className="habitat-strip">
+          {bird.habitats.map((habitat) => (
+            <span key={habitat}>{habitatLabels[habitat]}</span>
+          ))}
+        </div>
+      </section>
+
+      <section className="image-gallery-wrap">
         <h3>Image Gallery</h3>
         <div className="image-gallery" data-testid="image-gallery">
-          {images.map((image) => (
+          {images.slice(0, 4).map((image) => (
             <a href={image.pageUrl} key={image.id} rel="noreferrer" target="_blank">
               <img
                 alt={`${bird.commonName} ${image.label}`}
@@ -82,21 +111,6 @@ export function BirdDetail({ bird, mastery, onMastery }: BirdDetailProps) {
       <section>
         <h3>Notice First</h3>
         <p>{bird.appearance}</p>
-        <ul className="mark-list">
-          {bird.fieldMarks.map((mark) => (
-            <li key={mark}>{mark}</li>
-          ))}
-        </ul>
-      </section>
-
-      <section>
-        <h3>Trip Habitat</h3>
-        <p>{bird.habitat}</p>
-        <div className="habitat-strip">
-          {bird.habitats.map((habitat) => (
-            <span key={habitat}>{habitatLabels[habitat]}</span>
-          ))}
-        </div>
       </section>
 
       <section className="sound-panel">

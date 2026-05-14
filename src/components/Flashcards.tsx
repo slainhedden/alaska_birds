@@ -1,6 +1,7 @@
-import { ArrowRight, Check, RotateCcw } from "lucide-react";
+import { ArrowRight, Check, RotateCcw, Shuffle } from "lucide-react";
 import { useMemo, useState } from "react";
 import type { Bird, Mastery } from "../types";
+import { displayImageUrl, primaryImageForBird } from "../utils/images";
 import { BirdGlyph } from "./BirdGlyph";
 
 interface FlashcardsProps {
@@ -27,6 +28,8 @@ export function Flashcards({ birds, getMastery, onMastery }: FlashcardsProps) {
   }
 
   const bird = deck[index % deck.length];
+  const image = primaryImageForBird(bird);
+  const progress = Math.round((((index % deck.length) + 1) / deck.length) * 100);
 
   function nextCard() {
     setIndex((current) => (current + 1) % deck.length);
@@ -35,38 +38,65 @@ export function Flashcards({ birds, getMastery, onMastery }: FlashcardsProps) {
 
   return (
     <section className="learning-panel" data-testid="flashcard-panel">
-      <div className="panel-heading">
-        <span>
-          Card {(index % deck.length) + 1} of {deck.length}
-        </span>
-        <span className={`tier tier-${bird.likelihood}`}>{bird.likelihood}</span>
+      <div className="study-toolbar">
+        <div className="study-progress">
+          <span>Progress</span>
+          <strong>
+            Card {(index % deck.length) + 1} of {deck.length}
+          </strong>
+          <div className="progress-track">
+            <span style={{ width: `${progress}%` }} />
+          </div>
+        </div>
+        <button className="shuffle-button" type="button">
+          <Shuffle size={16} /> Shuffle
+        </button>
       </div>
       <button className="flashcard" onClick={() => setRevealed((value) => !value)} type="button">
-        <BirdGlyph bird={bird} />
+        {image ? (
+          <img
+            alt={`${bird.commonName} ${image.label}`}
+            className="flashcard-image"
+            src={displayImageUrl(image)}
+          />
+        ) : (
+          <BirdGlyph bird={bird} />
+        )}
         {revealed ? (
           <span className="flashcard-answer">
+            <span className={`tier tier-${bird.likelihood}`}>{bird.likelihood}</span>
             <strong>{bird.commonName}</strong>
             <em>{bird.scientificName}</em>
-            <span>{bird.quickHint}</span>
-            <span className="sound-mnemonic">{bird.sound.mnemonic}</span>
+            <span className="detail-line">
+              <b>Habitat</b> {bird.habitat}
+            </span>
+            <span className="detail-line">
+              <b>Field Marks</b> {bird.fieldMarks.slice(0, 3).join(", ")}
+            </span>
+            <span className="detail-line">
+              <b>Memory Hook</b> {bird.memoryHook}
+            </span>
           </span>
         ) : (
           <span className="flashcard-prompt">
             <strong>{bird.memoryHook}</strong>
-            <span>{bird.fieldMarks.slice(0, 3).join(" · ")}</span>
-            <span>{bird.sound.listenFor}</span>
+            <span>{bird.fieldMarks.slice(0, 3).join(", ")}</span>
+            <span className="sound-mnemonic">{bird.sound.mnemonic}</span>
           </span>
         )}
       </button>
       <div className="learning-actions">
-        <button onClick={() => setRevealed(false)} type="button">
-          <RotateCcw size={16} /> Hide
+        <button className="again" onClick={() => setRevealed(false)} type="button">
+          <RotateCcw size={16} /> Again
         </button>
-        <button onClick={() => onMastery(bird.id, "known")} type="button">
-          <Check size={16} /> Known
+        <button className="hard" onClick={() => onMastery(bird.id, "learning")} type="button">
+          Hard
         </button>
-        <button data-testid="flashcard-next" onClick={nextCard} type="button">
-          <ArrowRight size={16} /> Next
+        <button className="good" onClick={() => onMastery(bird.id, "known")} type="button">
+          <Check size={16} /> Good
+        </button>
+        <button className="easy" data-testid="flashcard-next" onClick={nextCard} type="button">
+          <ArrowRight size={16} /> Easy
         </button>
       </div>
     </section>

@@ -1,4 +1,4 @@
-import { CheckCircle2, Circle, Ear, Volume2 } from "lucide-react";
+import { Bookmark, CheckCircle2, ChevronRight, Circle, Ear, Volume2 } from "lucide-react";
 import type { Bird, Mastery } from "../types";
 import { habitatLabels, likelihoodLabels } from "../utils/birds";
 import { hasAnyAudio } from "../utils/audio";
@@ -9,10 +9,11 @@ interface BirdCardProps {
   bird: Bird;
   mastery: Mastery;
   isSelected: boolean;
+  isFavorite: boolean;
   onSelect: (bird: Bird) => void;
 }
 
-export function BirdCard({ bird, mastery, isSelected, onSelect }: BirdCardProps) {
+export function BirdCard({ bird, mastery, isFavorite, isSelected, onSelect }: BirdCardProps) {
   const MasteryIcon = mastery === "known" ? CheckCircle2 : mastery === "learning" ? Ear : Circle;
   const image = primaryImageForBird(bird);
 
@@ -45,15 +46,28 @@ export function BirdCard({ bird, mastery, isSelected, onSelect }: BirdCardProps)
         </span>
         <span className="bird-card-name">{bird.commonName}</span>
         <span className="bird-card-science">{bird.scientificName}</span>
-        <span className="bird-card-hint">{bird.quickHint}</span>
-        <span className="habitat-strip">
-          {bird.habitats.slice(0, 3).map((habitat) => (
-            <span key={habitat}>{habitatLabels[habitat]}</span>
-          ))}
+      </span>
+      <span className="bird-card-meta">
+        <span className="meta-label">Habitat</span>
+        <span>{bird.habitat}</span>
+      </span>
+      <span className="bird-card-meta">
+        <span className="meta-label">Field Marks</span>
+        <span>{bird.fieldMarks.slice(0, 3).join(", ")}</span>
+      </span>
+      <span className="bird-card-actions">
+        <span className={`favorite-mark ${isFavorite ? "active" : ""}`} aria-label="Favorite indicator">
+          <Bookmark size={18} />
+        </span>
+        <ChevronRight size={18} />
+        <span className={`mastery-dot mastery-${mastery}`}>
+          <MasteryIcon size={16} />
         </span>
       </span>
-      <span className={`mastery-dot mastery-${mastery}`}>
-        <MasteryIcon size={16} />
+      <span className="habitat-strip">
+        {bird.habitats.slice(0, 3).map((habitat) => (
+          <span key={habitat}>{habitatLabels[habitat]}</span>
+        ))}
       </span>
     </button>
   );

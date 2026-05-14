@@ -1,4 +1,4 @@
-import { Filter, Search } from "lucide-react";
+import { Filter, Search, Star } from "lucide-react";
 import type { HabitatTag, Likelihood } from "../types";
 import { habitatLabels, likelihoodLabels } from "../utils/birds";
 
@@ -6,6 +6,7 @@ export interface BirdFilterState {
   search: string;
   likelihood: "all" | Likelihood;
   habitat: "all" | HabitatTag;
+  favoritesOnly: boolean;
 }
 
 interface BirdFiltersProps {
@@ -23,7 +24,7 @@ export function BirdFilters({ filters, habitats, onChange }: BirdFiltersProps) {
           aria-label="Search birds"
           data-testid="bird-search"
           onChange={(event) => onChange({ ...filters, search: event.target.value })}
-          placeholder="Search name, sound, habitat, mark"
+          placeholder="Search birds by name..."
           type="search"
           value={filters.search}
         />
@@ -64,6 +65,14 @@ export function BirdFilters({ filters, habitats, onChange }: BirdFiltersProps) {
           ))}
         </select>
       </label>
+      <button
+        aria-pressed={filters.favoritesOnly}
+        className={`favorite-filter ${filters.favoritesOnly ? "active" : ""}`}
+        onClick={() => onChange({ ...filters, favoritesOnly: !filters.favoritesOnly })}
+        type="button"
+      >
+        Show Only Favorites <Star size={17} />
+      </button>
     </section>
   );
 }

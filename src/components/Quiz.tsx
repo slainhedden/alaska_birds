@@ -2,6 +2,8 @@ import { ArrowRight, CheckCircle2, XCircle } from "lucide-react";
 import { useMemo, useState } from "react";
 import type { Bird } from "../types";
 import { optionSet, shuffledBirds } from "../utils/birds";
+import { displayImageUrl, primaryImageForBird } from "../utils/images";
+import { BirdGlyph } from "./BirdGlyph";
 
 interface QuizProps {
   birds: Bird[];
@@ -33,6 +35,7 @@ export function Quiz({ birds, onAnswer }: QuizProps) {
       : questionType === 1
         ? answer.fieldMarks.slice(0, 3).join(" · ")
         : answer.habitat;
+  const answerImage = primaryImageForBird(answer);
 
   function choose(bird: Bird) {
     if (result) {
@@ -57,29 +60,66 @@ export function Quiz({ birds, onAnswer }: QuizProps) {
 
   return (
     <section className="learning-panel" data-testid="quiz-panel">
-      <div className="panel-heading">
-        <span>Quiz {index + 1}</span>
-        <span className={`tier tier-${answer.likelihood}`}>{answer.likelihood}</span>
-      </div>
-      <h2>Which bird matches this clue?</h2>
-      <p className="quiz-clue">{prompt}</p>
-      <div className="choice-grid">
-        {options.map((bird) => {
-          const isPicked = result?.pickedId === bird.id;
-          const isAnswer = result && bird.id === answer.id;
-          return (
-            <button
-              className={`${isPicked ? "picked" : ""} ${isAnswer ? "answer" : ""}`}
-              data-testid="quiz-choice"
-              disabled={Boolean(result)}
-              key={bird.id}
-              onClick={() => choose(bird)}
-              type="button"
-            >
-              {bird.commonName}
-            </button>
-          );
-        })}
+      <div className="quiz-shell">
+        <aside className="quiz-stats">
+          <strong>Question {(index % 10) + 1} of 10</strong>
+          <div className="progress-track">
+            <span style={{ width: `${(((index % 10) + 1) / 10) * 100}%` }} />
+          </div>
+          <span>Deck</span>
+          <b>{sorted.length} birds</b>
+        </aside>
+        <div className="quiz-card">
+          <div className="panel-heading">
+            <span>
+              <h2>What bird is this?</h2>
+              <p>Choose the best answer.</p>
+            </span>
+            <span className={`tier tier-${answer.likelihood}`}>{answer.likelihood}</span>
+          </div>
+          <div className="quiz-main">
+            <div className="quiz-image-wrap">
+              {answerImage ? (
+                <img
+                  alt={`${answer.commonName} ${answerImage.label}`}
+                  className="quiz-image"
+                  src={displayImageUrl(answerImage)}
+                />
+              ) : (
+                <BirdGlyph bird={answer} />
+              )}
+              <p className="quiz-clue">{prompt}</p>
+            </div>
+            <div className="choice-grid">
+              {options.map((bird) => {
+                const isPicked = result?.pickedId === bird.id;
+                const isAnswer = result && bird.id === answer.id;
+                const image = primaryImageForBird(bird);
+                return (
+                  <button
+                    className={`${isPicked ? "picked" : ""} ${isAnswer ? "answer" : ""}`}
+                    data-testid="quiz-choice"
+                    disabled={Boolean(result)}
+                    key={bird.id}
+                    onClick={() => choose(bird)}
+                    type="button"
+                  >
+                    <span className="choice-radio" />
+                    {image ? (
+                      <img alt="" className="choice-thumb" src={displayImageUrl(image)} />
+                    ) : (
+                      <BirdGlyph bird={bird} />
+                    )}
+                    <span>
+                      <strong>{bird.commonName}</strong>
+                      <em>{bird.scientificName}</em>
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        </div>
       </div>
       {result ? (
         <div className={`result result-${result.isCorrect ? "correct" : "wrong"}`} data-testid="quiz-result">
@@ -90,7 +130,7 @@ export function Quiz({ birds, onAnswer }: QuizProps) {
         </div>
       ) : null}
       <div className="learning-actions">
-        <button data-testid="quiz-next" disabled={!result} onClick={next} type="button">
+        <button className="primary-action" data-testid="quiz-next" disabled={!result} onClick={next} type="button">
           <ArrowRight size={16} /> Next
         </button>
       </div>

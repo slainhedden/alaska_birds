@@ -3,6 +3,8 @@ import { useMemo, useState } from "react";
 import type { Bird } from "../types";
 import { preferredAudioUrl } from "../utils/audio";
 import { optionSet, shuffledBirds } from "../utils/birds";
+import { displayImageUrl, primaryImageForBird } from "../utils/images";
+import { BirdGlyph } from "./BirdGlyph";
 
 interface SoundQuizProps {
   birds: Bird[];
@@ -69,68 +71,101 @@ export function SoundQuiz({ birds, onAnswer }: SoundQuizProps) {
 
   return (
     <section className="learning-panel" data-testid="sound-quiz-panel">
-      <div className="segmented">
-        <button
-          className={mode === "audio" ? "active" : ""}
-          data-testid="sound-audio-mode"
-          onClick={() => switchMode("audio")}
-          type="button"
-        >
-          <Volume2 size={16} /> Audio-backed
-        </button>
-        <button
-          className={mode === "clue" ? "active" : ""}
-          data-testid="sound-clue-mode"
-          onClick={() => switchMode("clue")}
-          type="button"
-        >
-          Call clues
-        </button>
-      </div>
-
-      <div className="panel-heading">
-        <span>Sound {index + 1}</span>
-        <span>{mode === "audio" ? `${audioBirds.length} embedded` : `${clueBirds.length} clues`}</span>
-      </div>
-
-      {audioUrl ? (
-        <div className="audio-shell" data-testid="sound-audio">
-          <Volume2 size={18} />
-          <span>Embedded audio ready.</span>
-          <audio controls src={audioUrl}>
-            <track kind="captions" />
-          </audio>
-        </div>
-      ) : (
-        <div className="no-audio" data-testid="sound-no-audio">
-          <Volume2 size={18} />
-          <span>No embedded audio. Use the call clue and source link.</span>
-        </div>
-      )}
-
-      <p className="sound-mnemonic">{answer.sound.mnemonic}</p>
-      <p className="quiz-clue">{answer.sound.listenFor}</p>
-      <a className="source-link" href={answer.sound.source.sourceUrl} rel="noreferrer" target="_blank">
-        Source <ExternalLink size={14} />
-      </a>
-
-      <div className="choice-grid">
-        {options.map((bird) => {
-          const isPicked = result?.pickedId === bird.id;
-          const isAnswer = result && bird.id === answer.id;
-          return (
+      <div className="quiz-shell sound-shell">
+        <aside className="quiz-stats">
+          <strong>Question {(index % 10) + 1} of 10</strong>
+          <div className="progress-track">
+            <span style={{ width: `${(((index % 10) + 1) / 10) * 100}%` }} />
+          </div>
+          <span>Mode</span>
+          <b>{mode === "audio" ? "Audio" : "Call clues"}</b>
+          <div className="segmented compact">
             <button
-              className={`${isPicked ? "picked" : ""} ${isAnswer ? "answer" : ""}`}
-              data-testid="sound-choice"
-              disabled={Boolean(result)}
-              key={bird.id}
-              onClick={() => choose(bird)}
+              className={mode === "audio" ? "active" : ""}
+              data-testid="sound-audio-mode"
+              onClick={() => switchMode("audio")}
               type="button"
             >
-              {bird.commonName}
+              Audio
             </button>
-          );
-        })}
+            <button
+              className={mode === "clue" ? "active" : ""}
+              data-testid="sound-clue-mode"
+              onClick={() => switchMode("clue")}
+              type="button"
+            >
+              Clues
+            </button>
+          </div>
+        </aside>
+
+        <div className="sound-practice-card">
+          {audioUrl ? (
+            <div className="audio-shell" data-testid="sound-audio">
+              <button aria-label="Play call" className="play-button" type="button">
+                <Volume2 size={20} />
+              </button>
+              <div className="waveform" aria-hidden="true">
+                {Array.from({ length: 36 }, (_, barIndex) => (
+                  <span key={barIndex} style={{ height: `${18 + ((barIndex * 13) % 34)}px` }} />
+                ))}
+              </div>
+              <span>0:00 / 0:08</span>
+              <audio controls src={audioUrl}>
+                <track kind="captions" />
+              </audio>
+              <small>Embedded audio ready.</small>
+            </div>
+          ) : (
+            <div className="no-audio" data-testid="sound-no-audio">
+              <Volume2 size={18} />
+              <span>No embedded audio. Use the call clue and source link.</span>
+            </div>
+          )}
+
+          <h2>What bird is this?</h2>
+          <p>Choose the best answer.</p>
+          <div className="choice-grid sound-choices">
+            {options.map((bird) => {
+              const isPicked = result?.pickedId === bird.id;
+              const isAnswer = result && bird.id === answer.id;
+              const image = primaryImageForBird(bird);
+              return (
+                <button
+                  className={`${isPicked ? "picked" : ""} ${isAnswer ? "answer" : ""}`}
+                  data-testid="sound-choice"
+                  disabled={Boolean(result)}
+                  key={bird.id}
+                  onClick={() => choose(bird)}
+                  type="button"
+                >
+                  <span className="choice-radio" />
+                  {image ? (
+                    <img alt="" className="choice-thumb" src={displayImageUrl(image)} />
+                  ) : (
+                    <BirdGlyph bird={bird} />
+                  )}
+                  <span>
+                    <strong>{bird.commonName}</strong>
+                    <em>{bird.scientificName}</em>
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        <aside className="sound-about">
+          <h3>About this call</h3>
+          <p>{answer.sound.description}</p>
+          <p>{answer.sound.listenFor}</p>
+          <h3>Source</h3>
+          <a className="source-link" href={answer.sound.source.sourceUrl} rel="noreferrer" target="_blank">
+            {answer.sound.source.sourceName} <ExternalLink size={14} />
+          </a>
+          <h3>Memory</h3>
+          <p className="sound-mnemonic">{answer.sound.mnemonic}</p>
+        </aside>
       </div>
 
       {result ? (
@@ -147,7 +182,7 @@ export function SoundQuiz({ birds, onAnswer }: SoundQuizProps) {
       ) : null}
 
       <div className="learning-actions">
-        <button data-testid="sound-next" disabled={!result} onClick={next} type="button">
+        <button className="primary-action" data-testid="sound-next" disabled={!result} onClick={next} type="button">
           <ArrowRight size={16} /> Next
         </button>
       </div>

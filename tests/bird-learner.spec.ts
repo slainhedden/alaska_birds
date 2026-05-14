@@ -21,7 +21,7 @@ test("validates the bird learning app core flows", async ({ page }) => {
   await page.goto("/");
 
   await test.step("home page loads and bird cards render", async () => {
-    await expect(page.getByRole("heading", { name: "Talkeetna Bird Learner" })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Birds" })).toBeVisible();
     await expect(page.getByTestId("result-count")).toContainText("83 of 83 birds");
     await expect(page.getByTestId("bird-card")).toHaveCount(83);
     await expect(page.getByTestId("bird-card-image")).toHaveCount(83);
