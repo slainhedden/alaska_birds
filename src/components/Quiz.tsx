@@ -90,11 +90,10 @@ export function Quiz({ birds, onAnswer }: QuizProps) {
               )}
               <p className="quiz-clue">{prompt}</p>
             </div>
-            <div className="choice-grid">
+            <div className="choice-grid text-choice-grid">
               {options.map((bird) => {
                 const isPicked = result?.pickedId === bird.id;
                 const isAnswer = result && bird.id === answer.id;
-                const image = primaryImageForBird(bird);
                 return (
                   <button
                     className={`${isPicked ? "picked" : ""} ${isAnswer ? "answer" : ""}`}
@@ -105,11 +104,6 @@ export function Quiz({ birds, onAnswer }: QuizProps) {
                     type="button"
                   >
                     <span className="choice-radio" />
-                    {image ? (
-                      <img alt="" className="choice-thumb" src={displayImageUrl(image)} />
-                    ) : (
-                      <BirdGlyph bird={bird} />
-                    )}
                     <span>
                       <strong>{bird.commonName}</strong>
                       <em>{bird.scientificName}</em>

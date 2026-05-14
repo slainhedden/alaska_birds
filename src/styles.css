@@ -922,6 +922,10 @@ p {
   text-align: left;
 }
 
+.text-choice-grid button {
+  grid-template-columns: 18px minmax(0, 1fr);
+}
+
 .choice-grid button:hover:not(:disabled) {
   border-color: #0b6ff4;
 }
@@ -1195,10 +1199,7 @@ button:disabled {
   }
 
   .side-rail {
-    display: block;
-    padding: 12px 14px;
-    border-right: 0;
-    border-bottom: 1px solid #dbe2eb;
+    display: none;
   }
 
   .side-nav {
@@ -1329,14 +1330,6 @@ button:disabled {
     font-size: 1.55rem;
   }
 
-  .side-nav {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-  }
-
-  .side-nav button:last-child {
-    display: none;
-  }
-
   .bird-card {
     grid-template-columns: 92px minmax(0, 1fr);
   }
@@ -1359,6 +1352,10 @@ button:disabled {
 
   .choice-grid button {
     grid-template-columns: 18px 48px minmax(0, 1fr);
+  }
+
+  .text-choice-grid button {
+    grid-template-columns: 18px minmax(0, 1fr);
   }
 
   .choice-thumb {

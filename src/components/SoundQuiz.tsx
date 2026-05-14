@@ -3,8 +3,6 @@ import { useMemo, useState } from "react";
 import type { Bird } from "../types";
 import { preferredAudioUrl } from "../utils/audio";
 import { optionSet, shuffledBirds } from "../utils/birds";
-import { displayImageUrl, primaryImageForBird } from "../utils/images";
-import { BirdGlyph } from "./BirdGlyph";
 
 interface SoundQuizProps {
   birds: Bird[];
@@ -125,11 +123,10 @@ export function SoundQuiz({ birds, onAnswer }: SoundQuizProps) {
 
           <h2>What bird is this?</h2>
           <p>Choose the best answer.</p>
-          <div className="choice-grid sound-choices">
+          <div className="choice-grid text-choice-grid sound-choices">
             {options.map((bird) => {
               const isPicked = result?.pickedId === bird.id;
               const isAnswer = result && bird.id === answer.id;
-              const image = primaryImageForBird(bird);
               return (
                 <button
                   className={`${isPicked ? "picked" : ""} ${isAnswer ? "answer" : ""}`}
@@ -140,11 +137,6 @@ export function SoundQuiz({ birds, onAnswer }: SoundQuizProps) {
                   type="button"
                 >
                   <span className="choice-radio" />
-                  {image ? (
-                    <img alt="" className="choice-thumb" src={displayImageUrl(image)} />
-                  ) : (
-                    <BirdGlyph bird={bird} />
-                  )}
                   <span>
                     <strong>{bird.commonName}</strong>
                     <em>{bird.scientificName}</em>

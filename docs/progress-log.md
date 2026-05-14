@@ -313,3 +313,26 @@ Remaining:
 
 Assumptions:
 - The two visible mockups supplied in chat were used as the visual target. The referenced third file at `/Users/samhedden/Downloads/ChatGPT Image May 13, 2026, 09_27_12 PM.png` was unavailable in this environment.
+
+## Follow-up: Mobile Nav And Quiz Choice Fixes
+
+Changed:
+- Hid the desktop side rail on mobile so Browse, Cards, Quiz, and Sounds no longer appear as two stacked navigation bars.
+- Removed bird thumbnails from quiz and sound quiz answer choices so the answer is not visually obvious from matching the question image or using option photos.
+- Added Playwright assertions that mobile has one visible mode button per tab and that quiz answer choices have no thumbnails.
+
+Verified:
+- `npm run validate` passed.
+- `VITE_BASE_PATH=/alaska_birds/ npm run build` passed.
+- Mobile user-flow test at 390px verified one visible Browse/Cards/Quiz/Sounds row, 83 bird cards, search, detail sheet, quiz answer, sound quiz answer, no choice thumbnails, no console errors, no failed responses, and no horizontal overflow.
+- Desktop user-flow test at 1440px verified browse/search/detail, quiz answer, sound quiz answer, no choice thumbnails, no console errors, no failed responses, and no horizontal overflow.
+- Reviewed captured mobile and desktop screenshots after the flow checks.
+
+Commands run:
+- `npm run validate`
+- `VITE_BASE_PATH=/alaska_birds/ npm run build`
+- Browser-use screenshot on `http://127.0.0.1:5173/`
+- Playwright mobile and desktop user-flow smoke checks on `http://127.0.0.1:5173/`
+
+Remaining:
+- No blocking work remains.

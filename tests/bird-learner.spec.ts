@@ -81,6 +81,7 @@ test("validates the bird learning app core flows", async ({ page }) => {
   await test.step("quiz mode answers questions", async () => {
     await page.getByTestId("mode-quiz").click();
     await expect(page.getByTestId("quiz-panel")).toBeVisible();
+    await expect(page.locator('[data-testid="quiz-choice"] .choice-thumb')).toHaveCount(0);
     await page.getByTestId("quiz-choice").first().click();
     await expect(page.getByTestId("quiz-result")).toBeVisible();
     await expect(page.getByTestId("quiz-next")).toBeEnabled();
@@ -90,6 +91,7 @@ test("validates the bird learning app core flows", async ({ page }) => {
     await page.getByTestId("mode-sound").click();
     await expect(page.getByTestId("sound-quiz-panel")).toBeVisible();
     await expect(page.getByTestId("sound-audio")).toBeVisible();
+    await expect(page.locator('[data-testid="sound-choice"] .choice-thumb')).toHaveCount(0);
     await page.getByTestId("sound-choice").first().click();
     await expect(page.getByTestId("sound-result")).toBeVisible();
 
@@ -101,6 +103,9 @@ test("validates the bird learning app core flows", async ({ page }) => {
   await test.step("mobile viewport remains usable", async () => {
     await page.setViewportSize({ width: 390, height: 844 });
     await expect(page.getByRole("button", { name: "Browse" })).toBeVisible();
+    await expect(page.getByRole("button", { name: "Cards" }).filter({ visible: true })).toHaveCount(1);
+    await expect(page.getByRole("button", { name: "Quiz" }).filter({ visible: true })).toHaveCount(1);
+    await expect(page.getByRole("button", { name: "Sounds" }).filter({ visible: true })).toHaveCount(1);
     await page.getByTestId("mode-browse").click();
     await page.getByTestId("bird-card").filter({ hasText: "Common Raven" }).click();
     const mobileDetail = page.getByTestId("mobile-detail-sheet");
