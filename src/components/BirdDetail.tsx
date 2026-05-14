@@ -2,7 +2,7 @@ import { Check, ExternalLink, GraduationCap, RotateCcw, Volume2 } from "lucide-r
 import type { Bird, Mastery } from "../types";
 import { localTracksForBird, preferredAudioUrl } from "../utils/audio";
 import { habitatLabels, likelihoodLabels } from "../utils/birds";
-import { imagesForBird, primaryImageForBird } from "../utils/images";
+import { displayImageUrl, imagesForBird, primaryImageForBird } from "../utils/images";
 import { BirdGlyph } from "./BirdGlyph";
 
 interface BirdDetailProps {
@@ -25,8 +25,7 @@ export function BirdDetail({ bird, mastery, onMastery }: BirdDetailProps) {
             alt={`${bird.commonName} ${primaryImage.label}`}
             className="detail-primary-image"
             data-testid="detail-primary-image"
-            referrerPolicy="no-referrer"
-            src={primaryImage.thumbnailUrl}
+            src={displayImageUrl(primaryImage)}
           />
         ) : (
           <BirdGlyph bird={bird} />
@@ -69,9 +68,7 @@ export function BirdDetail({ bird, mastery, onMastery }: BirdDetailProps) {
             <a href={image.pageUrl} key={image.id} rel="noreferrer" target="_blank">
               <img
                 alt={`${bird.commonName} ${image.label}`}
-                loading="lazy"
-                referrerPolicy="no-referrer"
-                src={image.thumbnailUrl}
+                src={displayImageUrl(image)}
               />
               <span>{image.label}</span>
               <small>

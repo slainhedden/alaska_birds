@@ -1,5 +1,6 @@
 import { pathToFileURL } from "node:url";
 import path from "node:path";
+import { stat } from "node:fs/promises";
 
 const repoRoot = process.cwd();
 const { birds } = await import(pathToFileURL(path.join(repoRoot, "src/data/birds.ts")).href);
@@ -30,6 +31,17 @@ for (const bird of birds) {
     ) {
       invalid.push(`${bird.commonName}: ${image.id}`);
     }
+
+    if (image.thumbnailUrl.startsWith("/images/birds/")) {
+      const thumbnailPath = path.join(repoRoot, "public", image.thumbnailUrl.slice(1));
+      const thumbnailStat = await safeStat(thumbnailPath);
+
+      if (!thumbnailStat || thumbnailStat.size < 1_000) {
+        invalid.push(`${bird.commonName}: ${image.id} missing local thumbnail`);
+      }
+    } else {
+      invalid.push(`${bird.commonName}: ${image.id} thumbnail is not cached locally`);
+    }
   }
 }
 
@@ -57,3 +69,11 @@ console.log(
     2,
   ),
 );
+
+async function safeStat(filePath) {
+  try {
+    return await stat(filePath);
+  } catch {
+    return null;
+  }
+}

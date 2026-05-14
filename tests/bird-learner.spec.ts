@@ -27,6 +27,22 @@ test("validates the bird learning app core flows", async ({ page }) => {
     await expect(page.getByTestId("bird-card-image")).toHaveCount(83);
     await expect(page.getByTestId("audio-available")).toHaveCount(83);
     await expect(page.getByTestId("bird-card").filter({ hasText: "Common Raven" })).toBeVisible();
+
+    const firstCardImage = page.getByTestId("bird-card-image").first();
+    await expect
+      .poll(async () => firstCardImage.evaluate((element) => (element as HTMLImageElement).naturalWidth))
+      .toBeGreaterThan(0);
+
+    const firstImageState = await firstCardImage.evaluate((element) => {
+      const image = element as HTMLImageElement;
+      return {
+        naturalWidth: image.naturalWidth,
+        src: image.currentSrc,
+      };
+    });
+
+    expect(firstImageState.src).toContain("/images/birds/");
+    expect(firstImageState.naturalWidth).toBeGreaterThan(0);
   });
 
   await test.step("search, filters, and bird detail work", async () => {
@@ -87,10 +103,27 @@ test("validates the bird learning app core flows", async ({ page }) => {
     await expect(page.getByRole("button", { name: "Browse" })).toBeVisible();
     await page.getByTestId("mode-browse").click();
     await page.getByTestId("bird-card").filter({ hasText: "Common Raven" }).click();
-    await expect(page.getByTestId("mobile-detail-sheet")).toBeVisible();
-    await expect(page.getByTestId("mobile-detail-sheet")).toContainText("Common Raven");
+    const mobileDetail = page.getByTestId("mobile-detail-sheet");
+    await expect(mobileDetail).toBeVisible();
+    await expect(mobileDetail).toContainText("Common Raven");
 
-    const mobileSheetTop = await page.getByTestId("mobile-detail-sheet").evaluate((element) => {
+    const mobileDetailImage = mobileDetail.getByTestId("detail-primary-image");
+    await expect
+      .poll(async () => mobileDetailImage.evaluate((element) => (element as HTMLImageElement).naturalWidth))
+      .toBeGreaterThan(0);
+
+    const mobileImageState = await mobileDetailImage.evaluate((element) => {
+      const image = element as HTMLImageElement;
+      return {
+        naturalWidth: image.naturalWidth,
+        src: image.currentSrc,
+      };
+    });
+
+    expect(mobileImageState.src).toContain("/images/birds/");
+    expect(mobileImageState.naturalWidth).toBeGreaterThan(0);
+
+    const mobileSheetTop = await mobileDetail.evaluate((element) => {
       return element.getBoundingClientRect().top;
     });
     expect(mobileSheetTop).toBeLessThan(80);

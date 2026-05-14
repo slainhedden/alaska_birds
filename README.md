@@ -58,7 +58,7 @@ Details and licensing caveats are in `docs/audio-ingest.md`.
 ## Project Shape
 
 - `src/data/birds.ts` contains the researched static bird deck.
-- `src/data/imageManifest.ts` contains Wikimedia Commons image metadata for every bird.
+- `src/data/imageManifest.ts` contains Wikimedia Commons image metadata for every bird, with checked-in local thumbnails under `public/images/birds/`.
 - `src/data/localAudioManifest.ts` contains local audio metadata for every bird.
 - `src/components/` contains the browsing, detail, flashcard, quiz, sound quiz, and progress UI.
 - `docs/research-log.md` records sources, species criteria, assumptions, and media licensing notes.
@@ -67,11 +67,13 @@ Details and licensing caveats are in `docs/audio-ingest.md`.
 
 ## Image Refresh
 
-The checked-in image manifest is generated from Wikimedia Commons metadata:
+The checked-in image manifest is generated from Wikimedia Commons metadata and cached locally so GitHub Pages does not depend on external thumbnail hosts at runtime:
 
 ```bash
 npm run fetch:images
 npm run test:images
 ```
+
+`npm run fetch:images` refreshes Commons metadata, downloads reusable thumbnails into `public/images/birds/`, and rewrites the manifest to local paths. `npm run cache:images` verifies an existing local cache without re-querying Commons.
 
 The app displays card thumbnails and a labeled detail gallery with adult, male, female, juvenile, immature, or pair labels when those cues are available in Commons titles/descriptions.

@@ -244,3 +244,32 @@ Commands run:
 
 Remaining:
 - No blocking work remains.
+
+## Follow-up: Local Image Cache For Mobile Pages
+
+Changed:
+- Cached all Wikimedia Commons bird thumbnails into `public/images/birds/` so the GitHub Pages app serves images from the same origin instead of loading external Wikimedia thumbnail URLs at runtime.
+- Updated `src/data/imageManifest.ts` to use local thumbnail paths while preserving Commons page URLs, licenses, credits, and original file URLs.
+- Added `scripts/cache-wikimedia-images.mjs` plus `npm run cache:images` for local cache verification and made `npm run fetch:images` refresh Commons metadata and recache files.
+- Updated image URL rendering so local thumbnail paths resolve correctly under GitHub Pages base paths like `/alaska_birds/`.
+
+Verified:
+- `npm run cache:images` verified 414 local cached thumbnails.
+- `npm run test:images` passed with all 83 birds and 414 local image files present.
+- `npm run validate` passed, including the Playwright check that card images and the mobile detail image decode with nonzero dimensions.
+- Pages-style `VITE_BASE_PATH=/alaska_birds/ npm run build` passed.
+- In-app browser verification on `http://localhost:4174/alaska_birds/` found 83 rendered card images and a local first-image URL under `/alaska_birds/images/birds/`.
+- iPhone 13-emulated Playwright verification against the Pages-mounted build decoded visible card images and the Common Raven mobile detail image, found no failed image/asset responses, and found no horizontal overflow.
+
+Commands run:
+- `npm run cache:images`
+- `npm run test:images`
+- `npm run validate`
+- `VITE_BASE_PATH=/alaska_birds/ npm run build`
+- iPhone 13 Playwright smoke check against `http://127.0.0.1:4174/alaska_birds/`
+
+Remaining:
+- Commit, push, and re-check the deployed Pages site after GitHub Actions publishes.
+
+Assumptions:
+- The phone issue was caused by mobile/Safari handling of cross-site lazy-loaded Wikimedia thumbnails. Serving the thumbnails from the Pages origin removes that dependency.

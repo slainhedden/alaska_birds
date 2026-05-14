@@ -19,7 +19,7 @@ Primary sources used:
 - eBird finding-birds resources and web searches for regional observation context. The public eBird API requires an API key, so no unauthenticated API data was embedded: https://ebird.org/about/resources/finding-birds-with-ebird
 - Cornell Lab / All About Birds species guide pages are linked per species for field marks, habitat, and sound study.
 - Xeno-canto search links are stored per species as external sound-practice sources. Recordings were not embedded unless a reusable file was separately verified.
-- Wikimedia Commons image searches are stored per species as image-source candidates. Most photos are not embedded because licenses and attribution vary by file.
+- Wikimedia Commons image searches are stored per species as image-source candidates. The app uses checked-in local thumbnail copies only after Commons metadata exposes a source page, license, and credit for each file.
 - BirdCLEF/Kaggle and Xeno-canto API options were reviewed for a local-only audio ingest workflow. See `docs/audio-ingest.md`.
 - Wikimedia Commons API image metadata was used to generate `src/data/imageManifest.ts`. The manifest includes image entries for each of the 83 birds, with thumbnail URL, original file URL, Commons page URL, license, credit, and best-effort variant labels inferred from file titles/descriptions.
 - Wikimedia Commons audio metadata and Xeno-canto tagged searches were used to generate `src/data/localAudioManifest.ts`. Normal Xeno-canto API v3 requires an account API key, so the app uses source pages and direct download links where reachable, preserving license and recordist/source fields.
@@ -38,7 +38,7 @@ The 31-species expansion added: Canada Goose, American Wigeon, Northern Pintail,
 
 ## Media And Licensing Notes
 
-The app does not hotlink unverified copyrighted audio. Images are displayed from Wikimedia Commons thumbnail URLs with source page, license, and credit preserved in the manifest. Each bird has:
+The app does not hotlink unverified copyrighted audio. Images are displayed from checked-in local thumbnail files generated from Wikimedia Commons metadata, with source page, license, and credit preserved in the manifest. Each bird has:
 
 - at least one Wikimedia Commons image entry, usually five, labeled as adult/unspecified, adult, male, female, juvenile, immature, or pair when possible;
 - one local audio clip in `public/audio/birds/<bird-id>/`, sourced from Wikimedia Commons metadata or Xeno-canto direct downloads with source/license/credit notes preserved in `src/data/localAudioManifest.ts`;

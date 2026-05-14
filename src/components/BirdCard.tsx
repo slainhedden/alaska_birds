@@ -2,7 +2,7 @@ import { CheckCircle2, Circle, Ear, Volume2 } from "lucide-react";
 import type { Bird, Mastery } from "../types";
 import { habitatLabels, likelihoodLabels } from "../utils/birds";
 import { hasAnyAudio } from "../utils/audio";
-import { primaryImageForBird } from "../utils/images";
+import { displayImageUrl, primaryImageForBird } from "../utils/images";
 import { BirdGlyph } from "./BirdGlyph";
 
 interface BirdCardProps {
@@ -29,8 +29,7 @@ export function BirdCard({ bird, mastery, isSelected, onSelect }: BirdCardProps)
           className="bird-card-image"
           data-testid="bird-card-image"
           loading="lazy"
-          referrerPolicy="no-referrer"
-          src={image.thumbnailUrl}
+          src={displayImageUrl(image)}
         />
       ) : (
         <BirdGlyph bird={bird} />
