@@ -260,6 +260,9 @@ Verified:
 - Pages-style `VITE_BASE_PATH=/alaska_birds/ npm run build` passed.
 - In-app browser verification on `http://localhost:4174/alaska_birds/` found 83 rendered card images and a local first-image URL under `/alaska_birds/images/birds/`.
 - iPhone 13-emulated Playwright verification against the Pages-mounted build decoded visible card images and the Common Raven mobile detail image, found no failed image/asset responses, and found no horizontal overflow.
+- GitHub Actions deploy run `25839666340` succeeded after the push.
+- Live iPhone 13-emulated Playwright verification on `https://slainhedden.github.io/alaska_birds/?v=fc54a52` decoded visible card images and the Common Raven mobile detail image from the Pages origin, found no failed image/asset responses, and found no horizontal overflow.
+- In-app browser verification on the live Pages URL found 83 rendered card images and a local first-image URL under `/alaska_birds/images/birds/`.
 
 Commands run:
 - `npm run cache:images`
@@ -267,9 +270,12 @@ Commands run:
 - `npm run validate`
 - `VITE_BASE_PATH=/alaska_birds/ npm run build`
 - iPhone 13 Playwright smoke check against `http://127.0.0.1:4174/alaska_birds/`
+- `git push origin main`
+- `gh run watch 25839666340 --repo slainhedden/alaska_birds --exit-status`
+- iPhone 13 Playwright smoke check against `https://slainhedden.github.io/alaska_birds/?v=fc54a52`
 
 Remaining:
-- Commit, push, and re-check the deployed Pages site after GitHub Actions publishes.
+- No blocking work remains.
 
 Assumptions:
 - The phone issue was caused by mobile/Safari handling of cross-site lazy-loaded Wikimedia thumbnails. Serving the thumbnails from the Pages origin removes that dependency.
